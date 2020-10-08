@@ -5,10 +5,24 @@ class Whiteboard extends StatefulWidget {
   _WhiteboardState createState() => _WhiteboardState();
 }
 
-class _WhiteboardState extends State<Whiteboard> {
+class _WhiteboardState extends State<Whiteboard>
+    with AutomaticKeepAliveClientMixin<Whiteboard> {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  //Since the whiteboard is part of the TabBar, switching to a new tab reloads the tab.
+  //mixin and AutomaticKeepAliveClientMixin we can add persistence to a widget.
+  //Set wantKeepAlive to true, add an initState, and call super.build(context) from build Widget
+
   List<Offset> _points = <Offset>[];
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: Container(
         child: GestureDetector(
