@@ -1,8 +1,13 @@
 import 'package:CodeKaksha/drawer.dart';
-import 'package:CodeKaksha/whiteboard.dart';
+import 'package:CodeKaksha/mywhiteboard.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -48,7 +53,7 @@ class HomePage extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           children: [
             Container(),
-            Whiteboard(),
+            MyWhiteboard(),
             Container(),
           ],
         ),

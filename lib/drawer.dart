@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'main.dart';
-import 'whiteboard.dart';
+import 'mywhiteboard.dart';
 
 class MyDrawer extends StatelessWidget {
   @override
@@ -46,7 +45,7 @@ class MyDrawer extends StatelessWidget {
             ),
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Whiteboard()));
+                  MaterialPageRoute(builder: (context) => MyWhiteboard()));
             },
           ),
         ],
