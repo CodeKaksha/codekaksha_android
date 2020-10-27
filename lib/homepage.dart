@@ -1,4 +1,5 @@
 import 'package:CodeKaksha/drawer.dart';
+import 'package:CodeKaksha/editor.dart';
 import 'package:CodeKaksha/mywhiteboard.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,7 @@ class _HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        drawerEnableOpenDragGesture: false,
         appBar: AppBar(
           title: Text(
             "Code Kaksha",
@@ -54,7 +56,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Container(),
             MyWhiteboard(),
-            Container(),
+            Editor(),
           ],
         ),
       ),
