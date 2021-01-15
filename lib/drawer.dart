@@ -22,12 +22,12 @@ class MyDrawer extends StatelessWidget {
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: AssetImage("assets/images/ck.jpeg"),
+                        image: AssetImage('assets/images/ck.jpeg'),
                         fit: BoxFit.fill,
                       )),
                 ),
                 Text(
-                  "Code Kaksha",
+                  'Code Kaksha',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -40,7 +40,7 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.edit),
             title: Text(
-              "Whiteboard",
+              'Whiteboard',
               style: TextStyle(fontSize: 20),
             ),
             onTap: () {

@@ -1,5 +1,7 @@
 import 'package:CodeKaksha/main.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Editor extends StatefulWidget {
   @override
@@ -12,6 +14,24 @@ class _EditorState extends State<Editor>
   bool get wantKeepAlive => true;
 
   String dropDownValue = "C++";
+  var langShortForm = {'C++': 'cpp', 'Java': 'java', 'Python': 'python3'};
+
+  final myController = TextEditingController();
+
+  var api = 'https://emkc.org/api/v1/piston/execute';
+  var response, stdout;
+  executeCode(String lang, String src, String args) async {
+    response = await http.post(api,
+        body: jsonEncode({'language': lang, 'source': src, 'args': args}));
+    stdout = jsonDecode(response.body)['stdout'];
+    print(stdout.toString());
+  }
+
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +44,8 @@ class _EditorState extends State<Editor>
             //the column or row widget determines the intrinsic size of its non-flexible childen but since
             //the text field is taking up the entire space we need to make it flexible
             child: TextField(
+              controller: myController,
+              autofocus: false,
               keyboardType: TextInputType.multiline,
               maxLines: null,
               expands: true,
@@ -123,7 +145,10 @@ class _EditorState extends State<Editor>
                     splashColor: Colors.yellow,
                   ),
                   RaisedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      executeCode(
+                          langShortForm[dropDownValue], myController.text, "");
+                    },
                     padding: EdgeInsets.all(10.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
