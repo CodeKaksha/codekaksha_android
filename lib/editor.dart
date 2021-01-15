@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 class Editor extends StatefulWidget {
   @override
   _EditorState createState() => _EditorState();
@@ -16,7 +18,9 @@ class _EditorState extends State<Editor>
   String dropDownValue = "C++";
   var langShortForm = {'C++': 'cpp', 'Java': 'java', 'Python': 'python3'};
 
-  final myController = TextEditingController();
+  final editorController = TextEditingController();
+  final stdinController = TextEditingController();
+  String stdoutText = 'Write some code and run to see the output';
 
   var api = 'https://emkc.org/api/v1/piston/execute';
   var response, stdout;
@@ -24,12 +28,12 @@ class _EditorState extends State<Editor>
     response = await http.post(api,
         body: jsonEncode({'language': lang, 'source': src, 'args': args}));
     stdout = jsonDecode(response.body)['stdout'];
-    print(stdout.toString());
+    print('Output: ${stdout.toString()}');
   }
 
   @override
   void dispose() {
-    myController.dispose();
+    editorController.dispose();
     super.dispose();
   }
 
@@ -44,7 +48,7 @@ class _EditorState extends State<Editor>
             //the column or row widget determines the intrinsic size of its non-flexible childen but since
             //the text field is taking up the entire space we need to make it flexible
             child: TextField(
-              controller: myController,
+              controller: editorController,
               autofocus: false,
               keyboardType: TextInputType.multiline,
               maxLines: null,
@@ -79,6 +83,7 @@ class _EditorState extends State<Editor>
                 onChanged: (String newValue) {
                   setState(() {
                     dropDownValue = newValue;
+                    FocusScope.of(context).unfocus();
                   });
                 },
                 items: <String>["C++", "Java", "Python"]
@@ -98,9 +103,44 @@ class _EditorState extends State<Editor>
                 children: [
                   RaisedButton.icon(
                     onPressed: () {
-                      showDialog(
+                      FocusScope.of(context).unfocus();
+                      showBarModalBottomSheet(
                           context: context,
-                          builder: (BuildContext context) => ShowDialogStdIn());
+                          builder: (context) {
+                            return Container(
+                              margin: EdgeInsets.only(left: 15.0, right: 15.0),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 15),
+                                  Text(
+                                    "stdin",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontFamily: "Quicksand",
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: TextField(
+                                      controller: stdinController,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: null,
+                                      expands: true,
+                                      decoration: InputDecoration(
+                                        hintText: "Your input goes here",
+                                        border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
                     },
                     padding: EdgeInsets.all(10.0),
                     shape: RoundedRectangleBorder(
@@ -123,7 +163,35 @@ class _EditorState extends State<Editor>
                     splashColor: Colors.yellow,
                   ),
                   RaisedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      showBarModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              margin: EdgeInsets.only(left: 15.0, right: 15.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 15),
+                                  Center(
+                                    child: Text(
+                                      "stdout",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontFamily: "Quicksand",
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 15),
+                                  Text(stdoutText),
+                                ],
+                              ),
+                            );
+                          });
+                    },
                     padding: EdgeInsets.all(10.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -146,8 +214,9 @@ class _EditorState extends State<Editor>
                   ),
                   RaisedButton.icon(
                     onPressed: () {
-                      executeCode(
-                          langShortForm[dropDownValue], myController.text, "");
+                      FocusScope.of(context).unfocus();
+                      executeCode(langShortForm[dropDownValue],
+                          editorController.text, "");
                     },
                     padding: EdgeInsets.all(10.0),
                     shape: RoundedRectangleBorder(
